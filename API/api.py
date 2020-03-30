@@ -19,15 +19,22 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
+    avg_genres = {}
+
     data_app_store = pd.read_csv("../dataset_appstore/AppleStore.csv")
     data_google_store = pd.read_csv("../dataset_googlestore/googleplaystore.csv")
     dfa_appstore = pd.DataFrame({
         0 : data_app_store['user_rating'],
         1 : data_app_store['prime_genre']
     })
-
+    #avg_genres = data_app_store['prime_genre']
+    for genre in sorted(set(data_app_store['prime_genre'])):
+        avg_genres[genre] = list(data_app_store['prime_genre']).count(str(genre)) / len(data_app_store['prime_genre']) *100
+        #avg_genres.setdefault(genre,data_app_store['prime_genre'].count(str(genre)))
+    print(avg_genres)
+    #graph.setdefault(row["Parent"], []).append(row["Son"]) 
     
-    return json.dumps(list(dfa_appstore[1]))
+    return json.dumps(avg_genres)
 
 
 
