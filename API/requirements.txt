@@ -1,0 +1,4 @@
+flask
+json
+pandas
+numpy
