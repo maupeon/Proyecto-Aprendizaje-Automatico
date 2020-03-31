@@ -49,57 +49,115 @@ def group_by_rating():
     sorted_json = {}
 
     #json_file = dict(data_google_store)
-    test = data_google_store.sort_values(['Rating'])
-    
-    print("RADAMES= ",test['App'][0])
-    #graph.setdefault(row["Parent"], []).append(row["Son"]) 
-    
-    return '0'
+    test = data_google_store.sort_values(['Rating'], ascending = False)
+
+    new_data = pd.DataFrame({
+        'Rating':test['Rating'],
+        'App':test['App']
+    })
+
+    print("RADAMES= ",test['App'])
+    print(new_data.iloc[0])
+
+    for i in range (len(new_data)):
+        json_file[str(i)] = {new_data['App'].iloc[i] : str(new_data['Rating'].iloc[i])}
+        
+    json_ = json.dumps(json_file)
+        
+    # print(result)
+    return json_
 
 @app.route('/best-price-by-gender')
 def best_price_by_gender():
     json_file = {}
     #global data_google_store
-    # data_google_store = pd.read_csv("../dataset_googlestore/googleplaystore.csv")
-    data_google_store = pd.read_csv("../dataset_googlestore/googleplaystore.csv")
-    
-    
+    #data_google_store = pd.read_csv("../dataset_googlestore/googleplaystore.csv")
+    data_google_store = pd.read_csv("googleplaystore.csv")
+
+
     #in_order = dfa_playstore.groupby('Genres')
-    #$3.99}
+    #3.99}
 
     dfa_ps = pd.DataFrame({
-        "Gender" : data_google_store["Genres"],
+        "Category" : data_google_store["Category"],
         "Price" : data_google_store["Price"]
     })
 
-    print(data_google_store)
+    #print(data_google_store)
     price = []
     gender = []
-    print("CULO",dfa_ps['Price'][480],"CUPALA")
 
     for app in dfa_ps["Price"].values:
-        print('app is', app)
+        #print('app is', app)
         if app == '0' or app == "Everyone":
             price.append(0)
         else:
             p = app
             p_list = p.split('$')
-            print('list is', p_list)
+            #print('list is', p_list)
             p = float(p_list[1])
             price.append(p)
 
-        gender.append(app)
+    for gen in dfa_ps["Category"].values:
+        gender.append(gen)
 
     dfa_playstore = pd.DataFrame({
-        "Gender" : gender,
+        "Category" : gender,
         "Price" : price
     })
-    
+
     print(dfa_playstore)
-    meanPrice = dfa_playstore("Gender")["Price"].mean()
+    meanPrice = dfa_playstore.groupby("Category")["Price"].mean()
     print(meanPrice)
 
-    return json.dumps(str(json_file)) 
+    x = []  ###
+    y = []  ###
+
+    sumCat = 0    
+    ###
+    meanCat = sumCat/len(dfa_playstore.groupby("Category")["Price"].mean())
+
+    meanPri = 0
+    json_file['x'] = []
+    json_file['y'] = []
+    for cont,i in enumerate(dfa_playstore.groupby("Category")["Price"].mean()):
+        sumCat += (cont+1)
+        x.append(cont+1)
+        meanPri += float(i)
+        y.append(float(i))
+        json_file['x'].append(cont + 1)
+        json_file['y'].append(float(i))
+       
+    ###
+    meanPri = meanPri/len(dfa_playstore.groupby("Category")["Price"].mean())
+
+    numerator = 0
+    denominator = 0
+    for i in range (len(dfa_playstore.groupby("Category")["Price"].mean())):
+        numerator += ((i+1) - (meanCat)) * (dfa_playstore.groupby("Category")["Price"].mean().iloc[i] - meanPri)
+        denominator += ((i+1) - (meanCat))**2
+
+        
+    b1 = numerator / denominator   ###
+    b0 = meanPri - (b1 * meanCat)   ###
+    json_file['b1'] = b1
+    json_file['b0'] = b0
+    print('Pendiente: ', b0)
+
+    maxX = len(dfa_playstore.groupby("Category")["Price"].mean())
+    minX = 1
+
+    X_ = np.linspace(minX, maxX, 1000)  ###
+    Y_ = b0 + b1 * X_   ###
+    json_file['X_'] = list(X_)
+    json_file['Y_'] = list(Y_)
+    print(json_file)
+    data = []
+
+    plt.plot(X_,Y_)
+    plt.scatter(x,y)
+
+    return json.dumps(json_file)
 
 
 @app.route("/json/", methods=['GET','POST'])
