@@ -159,6 +159,47 @@ def best_price_by_gender():
 
     return json.dumps(json_file)
 
+@app.route('/top-category-by-installs/<string:gender>')
+def top_category_by_installs(gender):
+    json_file = {}
+
+    data_google_store = pd.read_csv("../dataset_googlestore/googleplaystore.csv")
+
+    dfa_ps = pd.DataFrame({
+        "Category" : data_google_store["Category"],
+        "Installs" : data_google_store["Installs"]
+    })
+
+    allCategories = set()
+    installs = []
+    category = []
+
+    for install in dfa_ps["Installs"].values:
+        if install != "Free":
+            inst = install
+            num = inst.replace('+','')
+            numInstalls = int(num.replace(',', ''))
+            installs.append(numInstalls)
+        else:
+            installs.append(0)
+
+    for gen in dfa_ps["Category"].values:
+        category.append(gen)
+        allCategories.add(gen)
+
+    dfa_playstore = pd.DataFrame({
+        "Category" : category,
+        "Installs" : installs
+    })
+
+    #print(dfa_playstore)
+    categoriesInstalls = dfa_playstore.groupby("Category")["Installs"].sum()
+    numberInstallsCategory = categoriesInstalls.drop("1.9")
+    rankedInstalls = numberInstallsCategory.sort_values( ascending = False)
+    json_file = rankedInstalls.to_dict()
+
+    print(json_file)
+    return json.dumps(json_file)
 
 @app.route("/json/", methods=['GET','POST'])
 def gettingJson():
