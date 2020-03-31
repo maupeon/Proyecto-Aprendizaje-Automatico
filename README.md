@@ -22,9 +22,10 @@ Orientaciones para la evaluación del primer parcial para la materia de aprendiz
 
 ## 4. Consultar y cargar los datos.
 * http://localhost:5000/read -> Para cargar los datos
+* http://localhost:5000/ -> Para visualizar el porcentaje de las aplicaciones por genero
 * http://localhost:5000/top-by-user-rating -> Para visualizar las apps mejor calificadas por los usuarios
 * http://localhost:5000/best-price-by-gender -> Para visualizar las apps con mejor precio por genero
-
+* http://localhost:5000/top-category-by-installs -> Para visualizar los top generos por instalación.
 ## 5. Detenga y elimine el contenedor.
 * `docker stop flask-app`
 * `docker rm flask-app`

@@ -75,7 +75,7 @@ def best_price_by_gender():
     json_file = {}
     #global data_google_store
     #data_google_store = pd.read_csv("../dataset_googlestore/googleplaystore.csv")
-    data_google_store = pd.read_csv("../dataset_googlestore/googleplaystore.csv")
+    data_google_store = pd.read_csv("./googleplaystore.csv")
 
     dfa_ps = pd.DataFrame({
         "Category" : data_google_store["Category"],
@@ -161,7 +161,7 @@ def best_price_by_gender():
 def top_category_by_installs():
     json_file = {}
 
-    data_google_store = pd.read_csv("../dataset_googlestore/googleplaystore.csv")
+    data_google_store = pd.read_csv("./googleplaystore.csv")
     
     # Creating a dataframe to make it easy to read and analyze the information 
     dfa_ps = pd.DataFrame({
