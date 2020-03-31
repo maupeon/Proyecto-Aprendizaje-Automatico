@@ -75,7 +75,7 @@ def best_price_by_gender():
     json_file = {}
     #global data_google_store
     #data_google_store = pd.read_csv("../dataset_googlestore/googleplaystore.csv")
-    data_google_store = pd.read_csv("googleplaystore.csv")
+    data_google_store = pd.read_csv("../dataset_googlestore/googleplaystore.csv")
 
     dfa_ps = pd.DataFrame({
         "Category" : data_google_store["Category"],
@@ -159,21 +159,25 @@ def best_price_by_gender():
 
     return json.dumps(json_file)
 
-@app.route('/top-category-by-installs/<string:gender>')
-def top_category_by_installs(gender):
+# Endpoint to get the categories ranked by installs
+@app.route('/top-category-by-installs')
+def top_category_by_installs():
     json_file = {}
 
     data_google_store = pd.read_csv("../dataset_googlestore/googleplaystore.csv")
-
+    
+    # Creating a dataframe to make it easy to read and analyze the information 
     dfa_ps = pd.DataFrame({
         "Category" : data_google_store["Category"],
         "Installs" : data_google_store["Installs"]
     })
 
+    # Declaring variables to store the categories and the installs
     allCategories = set()
     installs = []
     category = []
 
+    # Iterating through the rows to get the installs and clean them (because the format: 5,000+) 
     for install in dfa_ps["Installs"].values:
         if install != "Free":
             inst = install
@@ -183,18 +187,23 @@ def top_category_by_installs(gender):
         else:
             installs.append(0)
 
+    # Storing the categories for the result
     for gen in dfa_ps["Category"].values:
         category.append(gen)
         allCategories.add(gen)
 
+    # Creating a new dataframe to store the outputs obtained before
     dfa_playstore = pd.DataFrame({
         "Category" : category,
         "Installs" : installs
     })
 
     #print(dfa_playstore)
+    # Getting the summation of the installs for each category
     categoriesInstalls = dfa_playstore.groupby("Category")["Installs"].sum()
+    # Cleaning the categories, deleting a unexpected category
     numberInstallsCategory = categoriesInstalls.drop("1.9")
+    # Sorting the ranked categories
     rankedInstalls = numberInstallsCategory.sort_values( ascending = False)
     json_file = rankedInstalls.to_dict()
 
