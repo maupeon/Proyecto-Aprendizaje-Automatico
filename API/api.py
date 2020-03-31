@@ -23,9 +23,9 @@ data_google_store = None
 @app.route('/read')
 def read():
     global data_app_store
-    data_app_store = pd.read_csv("../dataset_appstore/AppleStore.csv")
+    data_app_store = pd.read_csv("./AppleStore.csv")
     global data_google_store
-    data_google_store = pd.read_csv("../dataset_googlestore/googleplaystore.csv")
+    data_google_store = pd.read_csv("./googleplaystore.csv")
     dfa_appstore = pd.DataFrame({
         0 : data_google_store['Rating'],
         1 : data_google_store['Category']
@@ -154,9 +154,6 @@ def best_price_by_gender():
     print(json_file)
     data = []
 
-    plt.plot(X_,Y_)
-    plt.scatter(x,y)
-
     return json.dumps(json_file)
 
 
@@ -171,7 +168,6 @@ def gettingJson():
     else:
         return json.dumps({'string': 'String','int':1,"list Strings":['List','String'],'list int':[1,2]})
 
-'''
+
 if __name__ == '__main__':
-    app.run(host='localhost', debug=True, port=5000)
-'''
+    app.run(host ='0.0.0.0', port = 5000, debug = True)

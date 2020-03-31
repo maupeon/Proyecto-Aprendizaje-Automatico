@@ -1,10 +1,13 @@
 FROM python:3.7-alpine
 
 RUN apk update
+RUN apk add gcc g++ make automake subversion gfortran musl-dev python3-dev
 
-WORKDIR /usr/src/app
+WORKDIR /usr/bin/local
+
 COPY requirements.txt ./
 
+RUN python -m pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Add application code.
