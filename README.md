@@ -24,8 +24,9 @@ Mediante el uso de “Machine Learning” e Inteligencia Artificial se resuelve 
     * Apps mejor rankeadas por mes (opción para seccionar por semana, año, y de por vida)
 
 ## Arquitectura de la solución
+![picture alt](Arquitectura.png)
 
 ## Referencias
-[Dataset Play Store](https://www.kaggle.com/lava18/google-play-store-apps)
-[Dataset App Store](https://www.kaggle.com/ramamet4/app-store-apple-data-set-10k-apps)
-[Trending Topics](https://www.kaggle.com/hwassner/trending-topics)
+* [Dataset Play Store](https://www.kaggle.com/lava18/google-play-store-apps)
+* [Dataset App Store](https://www.kaggle.com/ramamet4/app-store-apple-data-set-10k-apps)
+* [Trending Topics](https://www.kaggle.com/hwassner/trending-topics)
