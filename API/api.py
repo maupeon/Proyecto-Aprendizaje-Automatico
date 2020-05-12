@@ -221,9 +221,14 @@ def top_category_by_installs():
     numberInstallsCategory = categoriesInstalls.drop("1.9")
     # Sorting the ranked categories
     rankedInstalls = numberInstallsCategory.sort_values( ascending = False)
-    json_file = rankedInstalls.to_dict()
 
-    print(json_file)
+    arr_cat = list(rankedInstalls)
+    arr_down =list(rankedInstalls.to_dict())
+    arr_res = []
+    for i,element in enumerate(arr_down):
+        arr_res.append({"name":element,'value':arr_cat[i]})
+    
+    json_file['0'] = arr_res
     return json.dumps(json_file)
 
 @app.route("/json/", methods=['GET','POST'])

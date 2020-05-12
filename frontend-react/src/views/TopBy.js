@@ -7,30 +7,36 @@ import Navbar from '../components/NavBar';
 import DescriptionCard from '../components/DescriptionCard';
 
 import API from "../utils/API";
+import LoadingScreen from './LoadingScreen';
 
-function TopBy(){
+function TopBy(props){
 
     const [datas, setData] = useState({});
     const [loading, setLoading] = useState(true);
-
+    const [error, setError] = useState(false);
     useEffect(() => {
-
+        //console.log(props.match.params.type)
         API.get('/read')
         .then((jsonres)=>{
           console.log(jsonres)
         })
-        .catch((error) => {
-          console.log(error)
+        .catch((err) => {
+          setLoading(false);
+          console.log("ERROR",err)
+          setError(true);
         })
-
-        API.get('/top-by-user-rating')
+        
+        API.get(props.match.params.type)
         .then((jsonres)=>{
           console.log(jsonres.data['0'])
           setData(jsonres.data['0']);
           setLoading(false);
         })
-        .catch((error) => {
-          console.log(error)
+        .catch((err) => {
+            
+          console.log("ERROR",err);
+          setLoading(false);
+          setError(true);
         })
         
         
@@ -39,28 +45,33 @@ function TopBy(){
     return(
         <div>
             {!loading?
-            <div>
-                <Navbar/>
-                <Grid container >
-                    <Grid item xs={6} justify="center"  direction="row">
-                        <Grid container spacing={1}>
-                            <Grid item xs={4}>
-                                <DescriptionCard/>
+                <div>
+                    {!error?
+                    <div>
+                        <Navbar/>
+                        <Grid container >
+                            <Grid item xs={6} justify="center"  direction="row">
+                                <Grid container spacing={1}>
+                                    <Grid item xs={4}>
+                                        <DescriptionCard/>
+                                    </Grid>
+                                    <Grid item xs={4}>
+                                        <DescriptionCard/>
+                                    </Grid>
+                                    <Grid item xs={4}>
+                                        <DescriptionCard/>
+                                    </Grid>
+                                </Grid>
                             </Grid>
-                            <Grid item xs={4}>
-                                <DescriptionCard/>
-                            </Grid>
-                            <Grid item xs={4}>
-                                <DescriptionCard/>
+                            <Grid item xs={6} >
+                                <Chart data={datas}/>
                             </Grid>
                         </Grid>
-                    </Grid>
-                    <Grid item xs={6} >
-                        <Chart data={datas}/>
-                    </Grid>
-                </Grid>
-            </div>      
-            :<div>caca</div>}
+                    </div>
+                    :
+                    <div>Hubo un error con la petici&oacute;n</div>}
+                </div>
+            :<LoadingScreen/>}
         </div>
     );
 }

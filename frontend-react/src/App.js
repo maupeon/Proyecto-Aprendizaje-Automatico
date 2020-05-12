@@ -2,6 +2,8 @@ import React from 'react';
 import './App.css';
 import Home from './views/Home';
 import TopBy from './views/TopBy';
+import PageNotFound from './views/PageNotFound';
+
 import {
   BrowserRouter,
   Switch,
@@ -16,8 +18,9 @@ function App() {
         <BrowserRouter>
           <Switch>
             <Route exact path="/" component={Home}/>
-            <Route exact path="/top-by" component={TopBy}/>
+            <Route exact path="/top-by/:type" component={TopBy}/>
             <Route exact path="/caca" component={Home}/>
+            <Route component={PageNotFound}></Route>
           </Switch>
         </BrowserRouter>
     </div>
