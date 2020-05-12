@@ -28,14 +28,14 @@ const data = [
     },
   ];
 
-const Chart = () => {
-
+const Chart = (props) => {
+  
     return (
       <>
             <LineChart
-                width={500}
+                width={800}
                 height={300}
-                data={data}
+                data={props.data}
                 margin={{
                   right: 30, left: 30
                 }}
@@ -45,8 +45,7 @@ const Chart = () => {
                 <YAxis />
                 <Tooltip />
                 <Legend />
-                <Line type="monotone" dataKey="pv" stroke="#8884d8" activeDot={{ r: 8 }} />
-                <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
+                <Line type="monotone" dataKey="value" stroke="#8884d8" activeDot={{ r: 8 }} />
             </LineChart>
       </>
     );

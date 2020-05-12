@@ -11,6 +11,7 @@ import API from "../utils/API";
 function TopBy(){
 
     const [datas, setData] = useState({});
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
 
@@ -24,39 +25,42 @@ function TopBy(){
 
         API.get('/top-by-user-rating')
         .then((jsonres)=>{
-          console.log(jsonres)
-          setData(jsonres);
+          console.log(jsonres.data['0'])
+          setData(jsonres.data['0']);
+          setLoading(false);
         })
         .catch((error) => {
           console.log(error)
         })
-
+        
         
     }, []);
 
     return(
         <div>
-            <Navbar/>
-            <Grid container >
-                <Grid item xs={6} justify="center"  direction="row">
-                    <Grid container spacing={1}>
-                        <Grid item xs={4}>
-                            <DescriptionCard/>
-                        </Grid>
-                        <Grid item xs={4}>
-                            <DescriptionCard/>
-                        </Grid>
-                        <Grid item xs={4}>
-                            <DescriptionCard/>
+            {!loading?
+            <div>
+                <Navbar/>
+                <Grid container >
+                    <Grid item xs={6} justify="center"  direction="row">
+                        <Grid container spacing={1}>
+                            <Grid item xs={4}>
+                                <DescriptionCard/>
+                            </Grid>
+                            <Grid item xs={4}>
+                                <DescriptionCard/>
+                            </Grid>
+                            <Grid item xs={4}>
+                                <DescriptionCard/>
+                            </Grid>
                         </Grid>
                     </Grid>
+                    <Grid item xs={6} >
+                        <Chart data={datas}/>
+                    </Grid>
                 </Grid>
-                <Grid item xs={6} >
-                    <div style={{margin:'0 auto'}}> 
-                    <Chart/>
-                    </div>
-                </Grid>
-            </Grid>
+            </div>      
+            :<div>caca</div>}
         </div>
     );
 }
