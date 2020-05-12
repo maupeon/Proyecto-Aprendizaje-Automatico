@@ -8,6 +8,7 @@ Mauricio Peón García		    A01024162
 
 from flask import Flask
 from flask import request
+from flask_cors import CORS, cross_origin
 import json
 import pandas as pd
 #import matplotlib.pyplot as plt
@@ -16,12 +17,15 @@ import numpy as np
 #from sklearn.model_selection import cross_val_score
 #from sklearn.naive_bayes import GaussianNB
 app = Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 data_app_store = None
 data_google_store = None
 
 # Method to read a csv file as a pandas DataFrame. Saving it in a global variable for the others methods to use
 @app.route('/read')
+@cross_origin()
 def read():
     global data_app_store
     data_app_store = pd.read_csv("./AppleStore.csv")
@@ -35,6 +39,7 @@ def read():
     return "Read sucessfull"
 
 @app.route('/')
+@cross_origin()
 def index():
     avg_genres = {}
     print( sorted(set(data_google_store['Category'])))
@@ -46,9 +51,11 @@ def index():
 
 # Method that sorts the apps by their rating
 @app.route('/top-by-user-rating')
+@cross_origin()
 def group_by_rating():
     json_file = {}
     sorted_json = {}
+    array_ = []
 
     #json_file = dict(data_google_store)
     
@@ -62,7 +69,11 @@ def group_by_rating():
 
     # We make a dictionary where each key is a number from 0 to the number of Apps, and the value is another dict with the name of the App and its rating
     for i in range (len(new_data)):
-        json_file[str(i)] = {new_data['App'].iloc[i] : str(new_data['Rating'].iloc[i])} # iloc is used to acces the 'ith' position of the DataFrame 
+        array_.append({'name' : new_data['App'].iloc[i], 'value' : str(new_data['Rating'].iloc[i])})
+
+    json_file['0'] = array_
+
+    print(array_)
         
     json_ = json.dumps(json_file)
         
@@ -71,6 +82,7 @@ def group_by_rating():
 
 # Method that will make a linear regression with the prices per category, to know how you should price your app
 @app.route('/best-price-by-gender')
+@cross_origin()
 def best_price_by_gender():
     json_file = {}
     #global data_google_store
@@ -158,6 +170,7 @@ def best_price_by_gender():
 
 # Endpoint to get the categories ranked by installs
 @app.route('/top-category-by-installs')
+@cross_origin()
 def top_category_by_installs():
     json_file = {}
 
@@ -208,6 +221,7 @@ def top_category_by_installs():
     return json.dumps(json_file)
 
 @app.route("/json/", methods=['GET','POST'])
+@cross_origin()
 def gettingJson():
     if request.method == 'POST':
         if request.is_json == False:
