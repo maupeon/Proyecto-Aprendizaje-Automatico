@@ -23,26 +23,11 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 data_app_store = None
 data_google_store = None
 
-# Method to read a csv file as a pandas DataFrame. Saving it in a global variable for the others methods to use
-@app.route('/read')
-@cross_origin()
-def read():
-    global data_app_store
-    data_app_store = pd.read_csv("./AppleStore.csv")
-    global data_google_store
-    data_google_store = pd.read_csv("./googleplaystore.csv")
-    dfa_appstore = pd.DataFrame({
-        0 : data_google_store['Rating'],
-        1 : data_google_store['Category']
-    })
-
-    return "Read sucessfull"
-
 @app.route('/')
 @cross_origin()
 def index():
     avg_genres = {}
-    print( sorted(set(data_google_store['Category'])))
+    #print( sorted(set(data_google_store['Category'])))
     for genre in sorted(set(data_google_store['Category'])):
         avg_genres[genre] = list(data_google_store['Category']).count(str(genre)) / len(data_google_store['Category']) *100
     #print(avg_genres)
@@ -245,4 +230,16 @@ def gettingJson():
 
 
 if __name__ == '__main__':
+
+    # Read a csv file as a pandas DataFrame. Saving it in a global variable for the others methods to use
+    data_app_store = pd.read_csv("./AppleStore.csv")
+    
+    data_google_store = pd.read_csv("./googleplaystore.csv")
+    dfa_appstore = pd.DataFrame({
+        0 : data_google_store['Rating'],
+        1 : data_google_store['Category']
+    })
+
+    print("Read sucessfull")
+
     app.run(host ='0.0.0.0', port = 5000, debug = True)

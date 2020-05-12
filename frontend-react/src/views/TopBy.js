@@ -16,15 +16,6 @@ function TopBy(props){
     const [error, setError] = useState(false);
     useEffect(() => {
         //console.log(props.match.params.type)
-        API.get('/read')
-        .then((jsonres)=>{
-          console.log(jsonres)
-        })
-        .catch((err) => {
-          setLoading(false);
-          console.log("ERROR",err)
-          setError(true);
-        })
         
         API.get(props.match.params.type)
         .then((jsonres)=>{
