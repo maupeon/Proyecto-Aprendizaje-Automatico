@@ -1,5 +1,7 @@
 import React,{useState, useEffect} from 'react';
 import Cards from '../components/Cards';
+import Chart from '../components/chart-example';
+import TopBy from './TopBy';
 
 const cards = [
     {
@@ -86,17 +88,11 @@ const cards = [
         type: 'Oficinas administrativas',
         desc: 'La descripcion de la obra'
     },
-
-
 ]
-
-
 function Home() {
     return (
         <div>
-            <div style={{margin: '0 auto', padding: '0 1%'}}>
-                <Cards cards={cards}/>
-            </div>
+            <Cards cards={cards} />
         </div>
     )
 }

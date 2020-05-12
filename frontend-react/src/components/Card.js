@@ -17,7 +17,7 @@ const Card = (props) => {
 	
     return (
       <>
-            <a href='google.com'>
+            <a href='top-by'>
                 <div className='mainCardDiv'>
                     <div style = {img} className='hoverImage'></div>
 
