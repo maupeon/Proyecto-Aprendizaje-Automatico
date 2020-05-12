@@ -85,6 +85,7 @@ def group_by_rating():
 @cross_origin()
 def best_price_by_gender():
     json_file = {}
+    array_2 = []
     #global data_google_store
     #data_google_store = pd.read_csv("../dataset_googlestore/googleplaystore.csv")
     data_google_store = pd.read_csv("./googleplaystore.csv")
@@ -130,15 +131,13 @@ def best_price_by_gender():
     meanCat = sumCat/len(dfa_playstore.groupby("Category")["Price"].mean())
 
     meanPri = 0
-    json_file['x'] = []
-    json_file['y'] = []
+
     for cont,i in enumerate(dfa_playstore.groupby("Category")["Price"].mean()):
         sumCat += (cont+1)
         x.append(cont+1)
         meanPri += float(i)
         y.append(float(i))
-        json_file['x'].append(cont + 1)
-        json_file['y'].append(float(i))
+
        
     ###
     meanPri = meanPri/len(dfa_playstore.groupby("Category")["Price"].mean())
@@ -152,8 +151,7 @@ def best_price_by_gender():
         
     b1 = numerator / denominator   ###
     b0 = meanPri - (b1 * meanCat)   ###
-    json_file['b1'] = b1
-    json_file['b0'] = b0
+
     print('Pendiente: ', b0)
 
     maxX = len(dfa_playstore.groupby("Category")["Price"].mean())
@@ -161,10 +159,18 @@ def best_price_by_gender():
 
     X_ = np.linspace(minX, maxX, 1000)  ###
     Y_ = b0 + b1 * X_   ###
-    json_file['X_'] = list(X_)
-    json_file['Y_'] = list(Y_)
+
+    cont = 0
+    X_ = list(X_)
+    Y_ = list(Y_)
+
+    for value in X_:
+        array_2.append({ 'x' : value, 'y' : Y_[cont]})
+        cont+=1
+
+    
+    json_file['0'] = array_2
     print(json_file)
-    data = []
 
     return json.dumps(json_file)
 
