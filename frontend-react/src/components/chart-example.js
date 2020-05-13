@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
-    LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
+    LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, BarChart, Bar, ResponsiveContainer, ComposedChart, Area
   } from 'recharts';
 
 
@@ -32,21 +32,22 @@ const Chart = (props) => {
   
     return (
       <>
-            <LineChart
-                width={800}
-                height={300}
-                data={props.data}
-                margin={{
-                  right: 30, left: 30
-                }}
-            >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Line type="monotone" dataKey="value" stroke="#8884d8" activeDot={{ r: 8 }} />
-            </LineChart>
+        <ComposedChart
+            width={800}
+            height={300}
+            data={props.data}
+            margin={{
+              right: 30, left: 30
+            }}
+        >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="name" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Bar type="monotone" dataKey="value" fill="#8884d8"  />
+          
+        </ComposedChart>
       </>
     );
   

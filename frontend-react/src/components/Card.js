@@ -12,7 +12,7 @@ const Card = (props) => {
 		backgroundRepeat: 'no-repeat',
 		backgroundSize: 'cover',
         position: 'relative',
-        boxShadow: 'inset 0 0 0 2000px rgba(0, 255, 255, 0.25)'
+        boxShadow: props.row.path!="Logo"?'inset 0 0 0 2000px rgba(0, 255, 255, 0.25)':'0'
     };
 
     useEffect(()=>{
@@ -21,12 +21,11 @@ const Card = (props) => {
     },[])
     const url = "top-by"
     const path = url+'/'+props.row.path;
-    console.log("IAUSJHHDIJASBNDIKJASDNBIJSA",path)
     return (
       <>
             <a href={path}>
                 <div className='mainCardDiv'>
-                    <div style = {img} className='hoverImage'></div>
+                    <div style = {img} className={props.row.path!="Logo"?'hoverImage':'logo'}></div>
 
                     <div className='Galery-textDiv'>
                         <Grid container direction="column" justify="space-between" alignItems="flex-start" style={{padding: '1em', textAlign: 'left', height: '100%'}}>

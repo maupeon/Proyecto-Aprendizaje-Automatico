@@ -9,8 +9,10 @@ Mauricio Peón García		    A01024162
 from flask import Flask
 from flask import request
 from flask_cors import CORS, cross_origin
+from sklearn import preprocessing 
 import json
 import pandas as pd
+import math
 #import matplotlib.pyplot as plt
 import numpy as np
 #from sklearn  import preprocessing
@@ -32,8 +34,22 @@ def index():
         avg_genres[genre] = list(data_google_store['Category']).count(str(genre)) / len(data_google_store['Category']) *100
     #print(avg_genres)
     #print(data_google_store)
+    
     return json.dumps(avg_genres)
 
+@app.route('/categories')
+@cross_origin()
+def categories():
+    avg_genres=[]
+    json_file={}
+    #print( sorted(set(data_google_store['Category'])))
+    for genre in sorted(set(data_google_store['Category'])):
+        if genre != "1.9":
+            avg_genres.append({'name':genre, 'value':list(data_google_store['Category']).count(str(genre)) / len(data_google_store['Category']) *100})
+    #print(avg_genres)
+    #print(data_google_store)
+    json_file['0']=avg_genres
+    return json.dumps(json_file)
 # Method that sorts the apps by their rating
 @app.route('/top-by-user-rating')
 @cross_origin()
@@ -45,20 +61,20 @@ def group_by_rating():
     #json_file = dict(data_google_store)
     
     # Sorting the data by Rating and saving it in a DF called test
-    test = data_google_store.sort_values(['Rating'], ascending = False)
+    test = data_google_store.sort_values(['Installs', 'Rating'], ascending = False)
 
     new_data = pd.DataFrame({
         'Rating':test['Rating'],
-        'App':test['App']
+        'App':test['App'],
+        'Installs':test['Installs']
     })
 
     # We make a dictionary where each key is a number from 0 to the number of Apps, and the value is another dict with the name of the App and its rating
-    for i in range (len(new_data)):
-        array_.append({'name' : new_data['App'].iloc[i], 'value' : str(new_data['Rating'].iloc[i])})
+    for i in range(1, 150):
+        array_.append({'name' : new_data['App'].iloc[i], 'value' : str(new_data['Rating'].iloc[i]), 'Installs' : float(new_data['Installs'].iloc[i][0:-1].replace(",",""))/1000000})
 
+   
     json_file['0'] = array_
-
-    print(array_)
         
     json_ = json.dumps(json_file)
         
@@ -150,7 +166,7 @@ def best_price_by_gender():
     Y_ = list(Y_)
 
     for value in X_:
-        array_2.append({ 'x' : value, 'y' : Y_[cont]})
+        array_2.append({ 'name' : Y_[cont], 'value' :value })
         cont+=1
 
     
@@ -214,6 +230,7 @@ def top_category_by_installs():
         arr_res.append({"name":element,'value':arr_cat[i]})
     
     json_file['0'] = arr_res
+    json_file['1'] = [[arr_down[0],arr_cat[0]],[arr_down[math.floor(len(arr_down)/2)],arr_cat[math.floor(len(arr_cat)/2)]],[arr_down[len(arr_down)-1],arr_cat[len(arr_cat)-1]]]
     return json.dumps(json_file)
 
 @app.route("/json/", methods=['GET','POST'])

@@ -6,7 +6,7 @@ const Cards = (props) => {
 
     return(
         <div style={{textAlign:"center", position: 'relative'}}>
-            <Grid container spacing={1}>
+            <Grid container >
             {props.cards.map((card,index) =>{
                 return(
                 <Grid item xs={12} sm= {6} md={4} lg={3} className = 'Galery-Card' key= {index} >
