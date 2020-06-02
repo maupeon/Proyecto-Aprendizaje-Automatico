@@ -26,6 +26,11 @@ Mediante el uso de “Machine Learning” e Inteligencia Artificial se resuelve 
 ## Arquitectura de la solución
 ![picture alt](Arquitectura.png)
 
+## Ejecutar la solución de forma local con Docker
+
+1. Ejecuta el Api siguiendo las instrucciones del Readme dentro de la carpeta API
+2. Ejecuta el Frontend en React siguiendo las instrucciones del Readme dentro de la carpeta frontend-react
+
 ## Referencias
 * [Dataset Play Store](https://www.kaggle.com/lava18/google-play-store-apps)
 * [Dataset App Store](https://www.kaggle.com/ramamet4/app-store-apple-data-set-10k-apps)

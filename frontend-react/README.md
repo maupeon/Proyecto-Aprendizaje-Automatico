@@ -37,28 +37,28 @@ Instead, it will copy all the configuration files and the transitive dependencie
 
 You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
-## Run in a Docker container
+## Ejecuta la aplicación de forma local con Docker 
 
-### Go to your project root
+### Ve a la raiz del proyecto de React
 
-cd react-frontend
+`$ cd react-frontend`
 
-### Build and tag the Docker image
+### Crea y nombra la imagen de Docker
 
-docker build -t react-frontend-app:dev .
+`$ docker build -t react-frontend-app:dev .`
 
-### Spin up the container once the build is done
+### Ejecuta un contenedor de la imagen recien creada con el siguiente comando:
 
-$ docker run \
-    -it \
-    --rm \
-    -v ${PWD}:/app \
-    -v /app/node_modules \
-    -p 3001:3000 \
-    -e CHOKIDAR_USEPOLLING=true \
-    sample:dev
+`$ docker run \`
+`    -it \`
+`    --rm \`
+`    -v ${PWD}:/app \`
+`   -v /app/node_modules \`
+`    -p 3000:3000 \`
+`    -e CHOKIDAR_USEPOLLING=true \`
+`    react-frontend-app:dev`
 
-What’s happening here?
+¿Qué significan los tags anteriores?
 
 1. The docker run command creates and runs a new container instance from the image we just created.
 2. -it starts the container in interactive mode. Why is this necessary? As of version 3.4.1, react-scripts exits after start-up (unless CI mode is specified) which will cause the container to exit. Thus the need for interactive mode.
@@ -66,15 +66,15 @@ What’s happening here?
 4. -v ${PWD}:/app mounts the code into the container at “/app”.
 {PWD} may not work on Windows. See this Stack Overflow question for more info.
 5. Since we want to use the container version of the “node_modules” folder, we configured another volume: -v /app/node_modules. You should now be able to remove the local “node_modules” flavor.
-6. -p 3001:3000 exposes port 3000 to other Docker containers on the same network (for inter-container communication) and port 3001 to the host.
+6. -p 3000:3000 exposes port 3000 to other Docker containers on the same network (for inter-container communication) and port 3000 to the host.
 For more, review this Stack Overflow question.
 7. Finally, -e CHOKIDAR_USEPOLLING=true enables a polling mechanism via chokidar (which wraps fs.watch, fs.watchFile, and fsevents) so that hot-reloading will work.
 
 [Source:](https://mherman.org/blog/dockerizing-a-react-app/)
 
-### Open your browser
+### Abre el siguiente url en el browser de tu preferencia
 
-Open your browser to http://localhost:3001/
+http://localhost:3000/
 
 ## Learn More
 

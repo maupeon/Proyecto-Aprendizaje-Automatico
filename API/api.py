@@ -63,12 +63,13 @@ def overview():
     mean_of_rating = data_google_store['Rating'].mean()
     mean_of_price = data_google_store["Price"].replace('[\$\,\.]', '', regex=True).astype(float).mean(axis = 0) /100
 
-    categoriesInstalls = data_google_store["Reviews"].sort_values( ascending = True)
-    print("YEYE",categoriesInstalls)
+    categoriesInstalls = data_google_store.sort_values(["Reviews", "Rating"], ascending = [False, False])
+    print("YEYE",categoriesInstalls.iloc[0].App)
 
     json_file['App'] = str(number_of_apps)
     json_file['Rating'] = str(mean_of_rating)
     json_file['Price'] = str(mean_of_price)
+    json_file['BestApp'] = categoriesInstalls.iloc[0].App
 
     new_dataframe = pd.DataFrame({
         'App':data_google_store['App'].count(),
@@ -275,23 +276,19 @@ def top_category_by_installs():
     categoriesInstalls = dfa_playstore.groupby("Category")["Installs"].sum().sort_values( ascending = False)
     categoriesInstallsCount = dfa_playstore.groupby("Category")["Installs"].count()
 
-     # Cleaning the categories, deleting a unexpected category
-    numberInstallsCategory = categoriesInstalls.drop("1.9")
-    numberInstallsCategoryCount = categoriesInstallsCount.drop("1.9")
-
     dictTemp = {}
-    listDict = numberInstallsCategory.keys()
+    listDict = categoriesInstalls.keys()
     for cat in listDict:
-        dictTemp[str(cat)] = numberInstallsCategoryCount[cat]
+        dictTemp[str(cat)] = categoriesInstallsCount[cat]
 
     categoriesName = dfa_playstore.groupby("Category")
     
     # Sorting the ranked categories
-    rankedInstalls = numberInstallsCategory.sort_values( ascending = False)
+    rankedInstalls = categoriesInstalls.sort_values( ascending = False)
 
-    arr_cat = list(numberInstallsCategory)
-    arr_cat_count = list(numberInstallsCategoryCount)
-    arr_down =list(numberInstallsCategory.to_dict())
+    arr_cat = list(categoriesInstalls)
+    arr_cat_count = list(categoriesInstallsCount)
+    arr_down =list(categoriesInstalls.to_dict())
     arr_res = []
 
     for i, element in enumerate(listDict):

@@ -19,13 +19,12 @@ function FormAndroid (props){
     //free paid
     const [error, setError] = React.useState(false);
     const [price, setPrice] = React.useState("");
-
     
     const handleClick = (event) => {
-        
         console.log("ME CLICKEO")
         if(category != "" && android != "" && name != "" && genre != "" && size != "" ){
             console.log("All right!!!!!")
+            setError(false)
             const PARAMS = {
                 "Category":category,
                 "AndroidVer":android,
@@ -42,6 +41,7 @@ function FormAndroid (props){
             })
             .catch(error => {
                 console.log("ERROR:",error)
+                setPrice(error)
             })
         }
         else{
@@ -55,7 +55,12 @@ function FormAndroid (props){
         <Grid container justify="center" alignItems="center">
             {error?
             <Grid item xs={12}>
-                <h2 style={{color:"red"}}>Porfavor ingrese todos los datos</h2>
+                <h4 style={{color:"red"}}>Porfavor ingrese todos los datos</h4>
+            </Grid>
+            :<></>}
+            {price?
+            <Grid item xs={12}>
+                <h4>De acuerdo a nuestro modelo de predicci&oacute;n y las caracteristicas de la app, debe de tener un precio de: USD{price}</h4>
             </Grid>
             :<></>}
             <Grid item xs={12}>
@@ -229,14 +234,11 @@ function FormAndroid (props){
             </Grid>
             
             <Grid item xs={12}>
-                <Button variant="contained" color="primary" onClick={handleClick}>
-                    Predecir precio
-                </Button>
-            </Grid>
-            <Grid item xs={12}>
-
-                De acuerdo a nuestro modelo de predicci&oacute;n y las caracteristicas de la app, debe de tener un precio de: USD{price}
-
+                <div style={{textAlign:"center", alignItems:"center", padding:"10px auto"}}>
+                    <Button variant="contained" color="primary" onClick={handleClick} style={{margin:"5px 0"}}>
+                        Predecir precio
+                    </Button>
+                </div>
             </Grid>
         </Grid>
       </>
