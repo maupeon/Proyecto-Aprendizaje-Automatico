@@ -1,101 +1,32 @@
-import React,{useState, useEffect} from 'react';
-import Cards from '../components/Cards';
+import React, { useEffect } from 'react';
+import '../styles/GlobalStyles.scss';
+//import {useSpring, animated} from 'react-spring';
+import banner from '../Images/home.jpg';
+//import Skeleton from '@material-ui/lab/Skeleton';
+//import logo from '../../logos/Logo2.png';
+import { HashLink as Link } from 'react-router-hash-link';
 
-const cards = [
-    {
-        image: 'https://s27389.pcdn.co/wp-content/uploads/2019/12/top-5-data-science-strategy-predictions-2020-1024x440.jpeg',
-        name: 'Top apps by rating and installs',
-        path: 'top-by-user-rating',
-        type: 'app',
-        y: 'reviews',
-        desc: 'Aquí podrás observar el comportamiento de las apps en relación a las calificaciones que obtienen por los usuarios'
-    },
-    {
-        image: 'https://picsum.photos/1000/600',
-        name: 'Top category by installs',
-        path: 'top-category-by-installs',
-        type: 'category',
-        y: 'downloads',
-        desc: 'Aquí podrás observar el la relación entre la categoría de las apps con la cantidad de descargas obtenidas en la PlayStore'
-    },
-    {
-        image: 'https://picsum.photos/1000/650',
-        name: 'Hotel dentro de la vanena',
-        path: 'best-price-by-gender',
-        type: 'Vivienda',
-        desc: 'La descripcion de la obra'
-    },
-    {
-        image: 'https://picsum.photos/1000/700',
-        name: 'Percentage of categories',
-        path: 'categories',
-        type: 'categories',
-        desc: 'La descripcion de categories'
-    },
-    {
-        image: 'https://picsum.photos/1000/750',
-        name: 'App',
-        path: 'best-price-by-gender',
-        type: 'gender',
-        desc: 'La descripcion de que luis se la come'
-    },
-    {
-        image: 'https://logolab.io/assets/img/cool-logo-ideas-2019/optimised/yuri-kartashev.jpeg',
-        name: ' ',
-        path: 'Logo',
-        type: ' ',
-        desc: ' '
-    },
-    {
-        image: 'https://www.xda-developers.com/files/2019/05/play-store-1.jpg',
-        name: ' ',
-        path: 'Logo',
-        type: ' ',
-        desc: ' '
-    },
-    {
-        image: 'https://picsum.photos/1000/900',
-        name: 'Helipuerto sobre avenida',
-        path: 'best-price-by-gender',
-        type: 'Vivienda',
-        desc: 'La descripcion de la obra'
-    },
-    {
-        image: 'https://picsum.photos/1000/950',
-        name: 'Centro de carga tarango',
-        path: 'best-price-by-gender',
-        type: 'Vivienda',
-        desc: 'La descripcion de la obra'
-    },
-    {
-        image: 'https://picsum.photos/1000/1000',
-        name: 'Casa-departamentos en las Aguilas',
-        path: 'best-price-by-gender',
-        type: 'Vivienda',
-        desc: 'La descripcion de la obra'
-    },
-    {
-        image: 'https://picsum.photos/1000/1010',
-        name: 'Hotel dentro de la vanena',
-        path: 'best-price-by-gender',
-        type: 'Vivienda',
-        desc: 'La descripcion de la obra'
-    },
-    {
-        image: 'https://picsum.photos/1000/1020',
-        name: 'Helipuerto sobre avenida',
-        path: 'best-price-by-gender',
-        type: 'Oficinas administrativas',
-        desc: 'La descripcion de la obra'
-    },
-]
-function Home() {
+
+function Home () {
+
+    //const spring = useSpring({ to: {number: 100}})
+    
     return (
         <div >
-            <Cards cards={cards} />
+            <div className='home-img'>
+                <div >
+                    {/* <img alt='logoMedu' style={{width: '2.5em', height: 'auto'}} src={logo}></img> */}
+                    <Link  className='home-text-container' style={{width: '2em', padding: '20px'}} smooth to="/dashboard">
+                        <h1 style={{fontWeight: '200', fontSize: '2.5em'}} className='home-wMainTitleFont home-text-container'>
+                            Appo
+                        </h1>
+                    </Link>
+                </div>
+                <section className="section04" >
+                </section>
+            </div>
         </div>
     )
 }
-
 
 export default Home;

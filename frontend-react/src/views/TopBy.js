@@ -48,8 +48,8 @@ function TopBy(props){
                     {!error?
                     <div>
                         <Navbar/>
-                        <Grid container >
-                            <Grid style={{padding: '0 2em'}} item xs={12}>
+                        <Grid container>
+                            <Grid style={{padding: '0 2em'}} item xs={6}>
                                 <Card style={{display: 'flex'}}>
                                     <CardActionArea>
                                         <CardContent>

@@ -1,0 +1,40 @@
+.home-img{
+    background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url('../Images/home.jpg');
+      
+    /* Set a specific height */
+    height: 100vh;
+  
+    /* Position and center the image to scale nicely on all screens */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+  }
+
+//FONTS
+//global
+
+@mixin marginPadding {
+    margin: 0;
+    padding: 0;
+  }
+
+.home-text-container {
+    @include marginPadding;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.home-container {
+    @include marginPadding;
+}
+
+
+.home-wMainTitleFont {
+  font-size: 5em;
+  font-weight: 600;
+  color: white;
+  margin: 0 auto;
+}

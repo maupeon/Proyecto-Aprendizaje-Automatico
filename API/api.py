@@ -9,7 +9,7 @@ Mauricio Peón García		    A01024162
 from flask import Flask
 from flask import request
 from flask_cors import CORS, cross_origin
-from sklearn import preprocessing 
+#from sklearn import preprocessing 
 import json
 import pandas as pd
 import math
@@ -61,17 +61,25 @@ def group_by_rating():
     #json_file = dict(data_google_store)
     
     # Sorting the data by Rating and saving it in a DF called test
-    test = data_google_store.sort_values(['Installs', 'Rating'], ascending = False)
+    # test = data_google_store.sort_values(['Rating'], ascending = False)
+    test = data_google_store
 
     new_data = pd.DataFrame({
         'Rating':test['Rating'],
         'App':test['App'],
         'Installs':test['Installs']
     })
-
+    print(len(test))
     # We make a dictionary where each key is a number from 0 to the number of Apps, and the value is another dict with the name of the App and its rating
-    for i in range(1, 150):
-        array_.append({'name' : new_data['App'].iloc[i], 'value' : str(new_data['Rating'].iloc[i]), 'Installs' : float(new_data['Installs'].iloc[i][0:-1].replace(",",""))/1000000})
+    for i in range(1, 1000):
+        if float(new_data['Installs'].iloc[i][0:-1].replace(",",""))/1000000 > 500:
+            array_.append({'name' : new_data['App'].iloc[i], 'value' : str(new_data['Rating'].iloc[i]), 'Installs' : float(new_data['Installs'].iloc[i][0:-1].replace(",",""))/1000000, 'fill': 'rgba(0, 0, 255, 255)'})
+        elif float(new_data['Installs'].iloc[i][0:-1].replace(",",""))/1000000 <= 500 and float(new_data['Installs'].iloc[i][0:-1].replace(",",""))/1000000 >= 1 :
+            array_.append({'name' : new_data['App'].iloc[i], 'value' : str(new_data['Rating'].iloc[i]), 'Installs' : float(new_data['Installs'].iloc[i][0:-1].replace(",",""))/1000000, 'fill': '#3182FC'})
+        elif float(new_data['Installs'].iloc[i][0:-1].replace(",",""))/1000000 < 1:
+            array_.append({'name' : new_data['App'].iloc[i], 'value' : str(new_data['Rating'].iloc[i]), 'Installs' : float(new_data['Installs'].iloc[i][0:-1].replace(",",""))/1000000, 'fill': 'rgb(255, 0, 0)'})
+        else:
+            array_.append({'name' : new_data['App'].iloc[i], 'value' : str(new_data['Rating'].iloc[i]), 'Installs' : float(new_data['Installs'].iloc[i][0:-1].replace(",",""))/1000000, 'fill': 'rgb(0, 0, 255)'})
 
    
     json_file['0'] = array_
@@ -227,10 +235,123 @@ def top_category_by_installs():
     arr_down =list(rankedInstalls.to_dict())
     arr_res = []
     for i,element in enumerate(arr_down):
-        arr_res.append({"name":element,'value':arr_cat[i]})
+        arr_res.append({"name":element,'value': int(arr_cat[i]/1000000)})
     
     json_file['0'] = arr_res
     json_file['1'] = [[arr_down[0],arr_cat[0]],[arr_down[math.floor(len(arr_down)/2)],arr_cat[math.floor(len(arr_cat)/2)]],[arr_down[len(arr_down)-1],arr_cat[len(arr_cat)-1]]]
+    return json.dumps(json_file)
+
+
+# Endpoint to get the categories ranked by installs
+@app.route('/android-versions')
+@cross_origin()
+def android_versions():
+    json_file = {}
+
+    data_google_store = pd.read_csv("./googleplaystore.csv")
+    
+    # Creating a dataframe to make it easy to read and analyze the information 
+    dfa_ps = pd.DataFrame({
+        "Version" : data_google_store["Android Ver"],
+        "App" : data_google_store["App"]
+    })
+
+    # Declaring variables to store the categories and the installs
+    allCategories = set()
+    installs = []
+    category = []
+
+    # Iterating through the rows to get the installs and clean them (because the format: 5,000+) 
+    versions = dfa_ps.groupby("Version")["Version"].count().sort_values( ascending = False)
+
+    arr_cat = list(versions)
+    arr_down =list(versions.to_dict())
+    arr_res = []
+    total=len(arr_down)
+    for i,element in enumerate(arr_down):
+        if i > 12:
+            break
+        if "-" in element:
+            pass
+        else:
+            values = 255*((i+1)/total)-255
+            value=int(abs(values))
+            #rgba="rgba(0,255,0,"+value+")"
+            rgba='#{:02x}{:02x}{:02x}{:02x}'.format( 150, value, 255, 255)
+            '''
+            '#{:02x}{:02x}{:02x}{:02x}'.format( 120, 0 , 255, 128 )
+            '#7800ff80'
+            '''
+            arr_res.append({"name":element,'value':arr_cat[i], 'fill': rgba})
+    arr_res = arr_res[::-1]
+    json_file['0'] = arr_res
+    
+    return json.dumps(json_file)
+
+
+@app.route("/appsbycategory", methods=['GET','POST'])
+@cross_origin()
+def appsByCategory():
+   
+    #rgba='#{:02x}{:02x}{:02x}{:02x}'.format( 150, value, 255, 255)
+    json_file = {}
+    count = data_google_store[['Category','Rating']].groupby('Category')['Rating'] \
+                                                    .count() \
+                                                    .reset_index(name='count') \
+                                                    .sort_values(['count'], ascending=False)
+
+    numberOfAppsByCategory = []
+
+    size = count["Category"].size
+    total = len(count)
+    for i in range(1,size):
+        values = 255*((i+1)/total)-255
+        value=int(abs(values))
+        #rgba="rgba(0,255,0,"+value+")"
+        rgba='#{:02x}{:02x}{:02x}{:02x}'.format( 0, value, 0, 255)
+        data = {"Category":str(count["Category"][i]),"value":int(count["count"][i]),'fill': rgba}
+        numberOfAppsByCategory.append(data)
+
+    json_file['0'] = numberOfAppsByCategory
+    return json.dumps(json_file)
+
+
+@app.route("/appsbycontentrating", methods=['GET','POST'])
+@cross_origin()
+def appsByContent():
+    json_file = {}
+
+    data_google_store = pd.read_csv("./googleplaystore.csv")
+    
+    # Creating a dataframe to make it easy to read and analyze the information 
+    dfa_ps = pd.DataFrame({
+        "Content Rating" : data_google_store["Content Rating"],
+        "App" : data_google_store["App"]
+    })
+
+    # Declaring variables to store the categories and the installs
+    allCategories = set()
+    installs = []
+    category = []
+
+    # Iterating through the rows to get the installs and clean them (because the format: 5,000+) 
+    versions = dfa_ps.groupby("Content Rating")["Content Rating"].count().sort_values( ascending = True)
+
+    arr_cat = list(versions)
+    arr_down =list(versions.to_dict())
+    arr_res = []
+    total=len(arr_down)
+    for i,element in enumerate(arr_down):
+        if "Unrated" in element or "Adults" in element:
+            pass
+        else:
+            values = 255*((i+1)/total)-254
+            value=int(abs(values))
+            rgba='#{:02x}{:02x}{:02x}{:02x}'.format( 0, value, 255, 255)
+            arr_res.append({"name":element,'value':arr_cat[i], 'fill': rgba})
+    arr_res = arr_res[::-1]
+    print("cacascsadadsaadsad", arr_res)
+    json_file['0'] = arr_res
     return json.dumps(json_file)
 
 @app.route("/json/", methods=['GET','POST'])
