@@ -18,7 +18,7 @@ function Home () {
                     {/* <img alt='logoMedu' style={{width: '2.5em', height: 'auto'}} src={logo}></img> */}
                     <Link  className='home-text-container' style={{width: '2em', padding: '20px'}} smooth to="/dashboard">
                         <h1 style={{fontWeight: '200', fontSize: '2.5em'}} className='home-wMainTitleFont home-text-container'>
-                            Appo
+                            1001
                         </h1>
                     </Link>
                 </div>

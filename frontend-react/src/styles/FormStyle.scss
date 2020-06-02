@@ -1,0 +1,154 @@
+@mixin marginPadding {
+    margin: 0;
+    padding: 0;
+}
+
+.bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    will-change: opacity;
+}
+  
+.myAccount-modal-mainContainer{
+    margin: 1em 0;
+    padding: 1em;
+    overflow: hidden !important;
+}
+.myAccount-modal-form{
+    padding-top: 1em;
+}
+.myAccount-modal-input{
+    height: 45px;
+    margin-top: .3em;
+    width: calc(100% - 2em);
+    padding: 0 1em;
+    font-size: 1em;
+    outline: none;
+    border: 1.5px solid rgba(0, 0, 0, 0.3);
+    border-radius: .5em;
+}
+.myAccount-modal-button{
+    padding: 1em 0;
+
+}
+.myAccount-modal-label{
+    width: 100%;
+
+}
+.myAccount-imageStyle{
+    max-width: 100%;
+    border-radius: 2em;
+}
+.myAccount-mainContainerProfile{
+    background-color: #D9EAF2;
+    //border-radius: 1.5em;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+    max-width:100%;
+}
+.myAccount-mainContainer {
+    background-color: #D9EAF2;
+    border-radius: 1.5em;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+    min-width:38vw;
+}
+
+.myAccount-topProfile{
+    background: linear-gradient(to bottom, rgba(0,0,255,.8), #D9EAF2);
+    height: 40%;
+    border-radius: 1.5em 1.5em 0 0;
+    padding: 1em;
+}
+.myAccount-top {
+    padding: 2em 0 0 0;
+    text-align:center;
+}
+.myAccount-content{
+    height: 60%; 
+    padding: 2em;
+}
+.myAccount-buttons{
+    text-align: center;
+}
+.myAccount-imageStyle{
+    max-width: 100%;
+    border-radius: 2em;
+}
+.myAccount-userData{
+    padding: 0 0 1em 0;
+}
+
+.myAccount-leftSide{
+    background-color: red;
+    margin: "3em" !important;
+
+}
+
+.myAccount-completedSurgery-image{
+    width: 100%;
+}
+.myAccount-completedSurgery-skeleton{
+    height: 1500px;
+    width: 100px;
+}
+
+.myAccount-label-file{
+    display: inline-block;
+    margin-top: 5px;
+    cursor: pointer;
+    border: 1px solid black ;
+    
+    background-color: white;
+    border-radius: 8px;
+    padding: 6px 12px;
+    letter-spacing: 1px;
+    cursor: pointer;
+}
+input[type="file"] {
+    visibility: hidden;
+    overflow: hidden;
+	position: absolute;
+}
+
+.myAccount-scroll-responsive{
+    padding-top: 3em;
+    overflow-y: scroll;
+    height: 100vh;
+    width: 100vw;
+}
+
+.myAccount-scroll-responsive-main{
+    position: absolute; 
+    top:0; 
+    background: #F0F7F7; 
+    overflow-y: hidden;
+}
+
+@media (max-width: 956px) {
+    .myAccount-scroll-responsive{
+        padding-top: 0.5em;
+        overflow-y: visible;
+        height: 100%;
+        width: 100vw;
+    }
+
+    .myAccount-scroll-responsive-main{
+        overflow-y: visible;
+    }
+}
+
+
+.myaccount-img{
+    image-orientation: from-image;
+}
+
+.medulx-glFont {
+    @include marginPadding;
+    font-size: 1em;
+    color: #7d7d81;
+    line-height: 1.5em;
+}

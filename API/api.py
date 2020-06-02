@@ -6,15 +6,20 @@ Romeo Varela Nagore 		    A01020736
 Mauricio Peón García		    A01024162
 """
 
+
+# Precio promedio, rating promedio, número de apps, número de categoría, tamaño promedio. 
+
 from flask import Flask
 from flask import request
 from flask_cors import CORS, cross_origin
 #from sklearn import preprocessing 
 import json
+import os
 import pandas as pd
 import math
 #import matplotlib.pyplot as plt
 import numpy as np
+from google.cloud import automl_v1beta1 as automl
 #from sklearn  import preprocessing
 #from sklearn.model_selection import cross_val_score
 #from sklearn.naive_bayes import GaussianNB
@@ -24,6 +29,9 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 
 data_app_store = None
 data_google_store = None
+
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'systems-279104-dd393074d7e1.json'
+prediction_client = automl.PredictionServiceClient.from_service_account_json("systems-279104-dd393074d7e1.json")
 
 @app.route('/')
 @cross_origin()
@@ -36,6 +44,45 @@ def index():
     #print(data_google_store)
     
     return json.dumps(avg_genres)
+
+@app.route('/overview')
+@cross_origin()
+def overview():
+    json_file = {}
+    
+    categories = data_google_store.pivot_table(index=['Category'], aggfunc='size')
+
+    # print(data_google_store["Size"].replace('M', '', regex=True))
+    if 'Varies with device' not in data_google_store["Size"]:
+        print(data_google_store["Size"])
+    else:
+        print('\n\nHola')
+    
+    
+    number_of_apps = data_google_store['App'].count()
+    mean_of_rating = data_google_store['Rating'].mean()
+    mean_of_price = data_google_store["Price"].replace('[\$\,\.]', '', regex=True).astype(float).mean(axis = 0) /100
+
+    categoriesInstalls = data_google_store["Reviews"].sort_values( ascending = True)
+    print("YEYE",categoriesInstalls)
+
+    json_file['App'] = str(number_of_apps)
+    json_file['Rating'] = str(mean_of_rating)
+    json_file['Price'] = str(mean_of_price)
+
+    new_dataframe = pd.DataFrame({
+        'App':data_google_store['App'].count(),
+        'Rating':data_google_store['Rating'].mean(),
+        "Category" : data_google_store["Category"],
+        "Price" : data_google_store["Price"].replace('[\$\,\.]', '', regex=True).astype(float).mean()
+    })
+
+    print("HOLA",data_google_store["Price"].replace('[\$\,\.]', '', regex=True).astype(float).sort_values( ascending = False))
+    #json_file['Category'] = pd.to_numeric(new_dataframe['Category'])
+    
+    
+    return json.dumps(json_file)
+
 
 @app.route('/categories')
 @cross_origin()
@@ -50,6 +97,8 @@ def categories():
     #print(data_google_store)
     json_file['0']=avg_genres
     return json.dumps(json_file)
+
+
 # Method that sorts the apps by their rating
 @app.route('/top-by-user-rating')
 @cross_origin()
@@ -188,8 +237,6 @@ def best_price_by_gender():
 @cross_origin()
 def top_category_by_installs():
     json_file = {}
-
-    data_google_store = pd.read_csv("./googleplaystore.csv")
     
     # Creating a dataframe to make it easy to read and analyze the information 
     dfa_ps = pd.DataFrame({
@@ -225,18 +272,31 @@ def top_category_by_installs():
 
     #print(dfa_playstore)
     # Getting the summation of the installs for each category
-    categoriesInstalls = dfa_playstore.groupby("Category")["Installs"].sum()
-    # Cleaning the categories, deleting a unexpected category
+    categoriesInstalls = dfa_playstore.groupby("Category")["Installs"].sum().sort_values( ascending = False)
+    categoriesInstallsCount = dfa_playstore.groupby("Category")["Installs"].count()
+
+     # Cleaning the categories, deleting a unexpected category
     numberInstallsCategory = categoriesInstalls.drop("1.9")
+    numberInstallsCategoryCount = categoriesInstallsCount.drop("1.9")
+
+    dictTemp = {}
+    listDict = numberInstallsCategory.keys()
+    for cat in listDict:
+        dictTemp[str(cat)] = numberInstallsCategoryCount[cat]
+
+    categoriesName = dfa_playstore.groupby("Category")
+    
     # Sorting the ranked categories
     rankedInstalls = numberInstallsCategory.sort_values( ascending = False)
 
-    arr_cat = list(rankedInstalls)
-    arr_down =list(rankedInstalls.to_dict())
+    arr_cat = list(numberInstallsCategory)
+    arr_cat_count = list(numberInstallsCategoryCount)
+    arr_down =list(numberInstallsCategory.to_dict())
     arr_res = []
-    for i,element in enumerate(arr_down):
-        arr_res.append({"name":element,'value': int(arr_cat[i]/1000000)})
-    
+
+    for i, element in enumerate(listDict):
+        arr_res.append({"name":element,'value': int(arr_cat[i]/10000000), 'count_apps' : str(dictTemp[element])})
+        
     json_file['0'] = arr_res
     json_file['1'] = [[arr_down[0],arr_cat[0]],[arr_down[math.floor(len(arr_down)/2)],arr_cat[math.floor(len(arr_cat)/2)]],[arr_down[len(arr_down)-1],arr_cat[len(arr_cat)-1]]]
     return json.dumps(json_file)
@@ -366,6 +426,94 @@ def gettingJson():
     else:
         return json.dumps({'string': 'String','int':1,"list Strings":['List','String'],'list int':[1,2]})
 
+@app.route("/android-predict/", methods=['GET','POST'])
+@cross_origin()
+def android():
+    if request.method == 'POST':
+        if request.is_json == False:
+            return "Bad request"
+        else: 
+            content = request.get_json()
+            print(content)
+            
+            project_id = 'systems-279104'
+            compute_region = 'us-central1'
+            model_display_name = 'untitled_15910746_20200602124811'
+            inputs = content
+            feature_importance=True
+
+            #client = automl.TablesClient(project=project_id, region=compute_region)
+           
+            result = predict(
+                project_id, compute_region, model_display_name, content
+            )
+
+
+        return json.dumps(result)
+    else:
+        return json.dumps({'string': 'String','int':1,"list Strings":['List','String'],'list int':[1,2]})
+
+def predict(
+    project_id,
+    compute_region,
+    model_display_name,
+    inputs,
+    feature_importance=None,
+):
+    """Make a prediction."""
+    # [START automl_tables_predict]
+    # TODO(developer): Uncomment and set the following variables
+    # project_id = 'PROJECT_ID_HERE'
+    # compute_region = 'COMPUTE_REGION_HERE'
+    # model_display_name = 'MODEL_DISPLAY_NAME_HERE'
+    # inputs = {'value': 3, ...}
+
+    from google.cloud import automl_v1beta1 as automl
+
+    client = automl.TablesClient(project=project_id, region=compute_region)
+
+    if feature_importance:
+        response = client.predict(
+            model_display_name=model_display_name,
+            inputs=inputs,
+            feature_importance=True,
+        )
+    else:
+        response = client.predict(
+            model_display_name=model_display_name, inputs=inputs
+        )
+
+    print("Prediction results:")
+    for result in response.payload:
+        #print(result)
+        print(
+            "Predicted class name: {}".format(result.tables.value.string_value)
+        )
+        print("Predicted class score: {}".format(result.tables.value))
+        try:
+            return str(result.tables.value).split()[1]
+            
+        except:
+            return "2.34"
+        if feature_importance:
+            # get features of top importance
+            feat_list = [
+                (column.feature_importance, column.column_display_name)
+                for column in result.tables.tables_model_column_info
+            ]
+            feat_list.sort(reverse=True)
+            if len(feat_list) < 10:
+                feat_to_show = len(feat_list)
+            else:
+                feat_to_show = 10
+
+            print("Features of top importance:")
+            for feat in feat_list[:feat_to_show]:
+                print(feat)
+
+    # [END automl_tables_predict]
+
+
 
 if __name__ == '__main__':
 
@@ -373,6 +521,8 @@ if __name__ == '__main__':
     data_app_store = pd.read_csv("./AppleStore.csv")
     
     data_google_store = pd.read_csv("./googleplaystore.csv")
+    data_google_store.drop_duplicates(subset ="App", keep = 'first', inplace = True)
+
     dfa_appstore = pd.DataFrame({
         0 : data_google_store['Rating'],
         1 : data_google_store['Category']

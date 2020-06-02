@@ -15,6 +15,7 @@ const TopByCategory = (props) => {
             ratio={4 / 3}
             stroke="#fff"
             fill="#3182FC"
+            unit = '0 M'
             isAnimationActive = {false}
             scaleToFit = {true}
             >

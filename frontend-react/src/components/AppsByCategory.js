@@ -10,12 +10,10 @@ const AppsByCategory = (props) => {
     return (
       <>
         <ResponsiveContainer width={'100%'} height={500}>
-            <RadarChart outerRadius={200} width={'750'} height={250} data={props.data}>
+            <RadarChart outerRadius={200} data={props.data}>
                 <PolarGrid />
-                <PolarAngleAxis dataKey="Category" />
-                <PolarRadiusAxis angle={30} domain={[0, 500]} />
+                <PolarAngleAxis dataKey="Category" domain={[0, 1700]}/>
                 <Radar name="Apps" dataKey="value" stroke="#1184d8" fill="#1184d8" fillOpacity={0.7} />
-                <Legend />
                 <Tooltip />
             </RadarChart>
         </ResponsiveContainer>
