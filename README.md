@@ -15,7 +15,7 @@ El objetivo que se espera cumplir es el sintetizar grandes cantidades de informa
 Mediante el uso de “Machine Learning” e Inteligencia Artificial se resuelve el problema encontrando datos importantes y relevantes que  ayuden a encontrar ciertos patrones y definir ciertas etiquetas, para presentar información relevante para el cliente y el desarrollo de su aplicación, además de definir las tendencias en el mercado actual del mercado de aplicaciones.
 
 ## Tecnologías a utilizar
-* Se pretende hacer un front end en React Js, un back end utilizando servicios de Azure y de AWS, tanto el procesamiento y entrenamiento de algoritmos de ML como almacenamiento de datos (Base de datos)
+* Se pretende hacer un front end en React Js, un back end utilizando servicios de Azure y de AWS, tanto el procesamiento y entrenamiento de algoritmos de ML como almacenamiento de datos (Base de datos), además de estar corriendo el front-end en AWS y el back-end en Azure
 * Para el análisis y extracción de datos para la aplicación se pretende utilizar python y sus librerías para una mejor interpretación
 * Para consumir los datos mencionados en el punto anterior se pretende utilizar y crear un REST API para acceder a los datos procesados
 * Dashboard dividido en dos segmentos, del lado izquierdo un menú para selección de categorías y del lado derecho se visualizarán los datos y la interpretación de los mismos. Las categorías que podrá seleccionar el usuario son:
