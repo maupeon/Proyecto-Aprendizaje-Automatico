@@ -7,8 +7,8 @@ WORKDIR /usr/bin/local
 
 COPY requirements.txt ./
 
-RUN python -m pip install --upgrade pip
-RUN pip install --no-cache-dir -r requirements.txt
+RUN python3 -m pip install --upgrade pip
+RUN pip3 install --no-cache-dir -r requirements.txt
 
 # Add application code.
 COPY . ./
