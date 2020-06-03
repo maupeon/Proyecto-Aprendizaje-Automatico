@@ -31,6 +31,10 @@ Mediante el uso de “Machine Learning” e Inteligencia Artificial se resuelve 
 1. Ejecuta el Api siguiendo las instrucciones del Readme dentro de la carpeta API
 2. Ejecuta el Frontend en React siguiendo las instrucciones del Readme dentro de la carpeta frontend-react
 
+## Aplicación en la nube
+* Aplicación: https://master.d3oe360fmm7c9k.amplifyapp.com/
+* API: https://apistudentexchange.azurewebsites.net/
+
 ## Referencias
 * [Dataset Play Store](https://www.kaggle.com/lava18/google-play-store-apps)
 * [Dataset App Store](https://www.kaggle.com/ramamet4/app-store-apple-data-set-10k-apps)
