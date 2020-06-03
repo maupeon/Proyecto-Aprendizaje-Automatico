@@ -29,3 +29,8 @@ Orientaciones para la evaluación del primer parcial para la materia de aprendiz
 ## 5. Detenga y elimine el contenedor.
 * `docker stop flask-app`
 * `docker rm flask-app`
+
+## Aplicación en la nube
+* Aplicación: https://master.d3oe360fmm7c9k.amplifyapp.com/
+* API: https://apistudentexchange.azurewebsites.net/
+
